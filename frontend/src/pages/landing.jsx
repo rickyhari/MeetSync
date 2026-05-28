@@ -25,7 +25,7 @@ export default function LandingPage() {
           </h1>
 
           <p>Cover a distance with MeetSync</p>
-          <Link to="/home" className="getStartedBtn">
+          <Link to="/auth" className="getStartedBtn">
             Get Started
           </Link>
         </div>
