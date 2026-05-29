@@ -11,36 +11,58 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
+import Snackbar from "@mui/material/Snackbar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { AuthContext } from "../contexts/AuthContext";
 
 const defaultTheme = createTheme();
 
 export default function Authentication() {
-  const [username, setUsername] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [name, setName] = React.useState();
-  const [error, setError] = React.useState();
-  const [message, setMessage] = React.useState();
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [error, setError] = React.useState("");
+  const [message, setMessage] = React.useState("");
 
   const [formState, setFormState] = React.useState(0);
 
   const [open, setOpen] = React.useState(false);
 
+  const { handleRegister, handleLogin } = React.useContext(AuthContext);
+
+  let handleAuth = async () => {
+    try {
+      if (formState === 0) {
+        let result = await handleLogin(username, password);
+      }
+      if (formState === 1) {
+        let result = await handleRegister(name, username, password);
+        console.log(result);
+        setUsername("");
+        setMessage(result);
+        setOpen(true);
+        setError("");
+        setFormState(0);
+        setPassword("");
+        setName("");
+      }
+    } catch (err) {
+      console.log(err);
+      let message = err.response.data.message;
+      setError(message);
+    }
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid
-        container
-        component="main"
-        sx={{ height: "100vh", width: "100%" }}
-      >
+      <Grid container component="main" sx={{ height: "100vh", width: "100%" }}>
         <CssBaseline />
         <Grid
           size={{ sm: 4, md: 7 }}
           sx={{
             minHeight: "100vh",
             display: { xs: "none", sm: "block" },
-            backgroundImage:
-              "url(https://picsum.photos/id/6/5000/3333)",
+            backgroundImage: "url(https://picsum.photos/id/6/5000/3333)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -74,6 +96,7 @@ export default function Authentication() {
                 variant={formState === 0 ? "contained" : "text"}
                 onClick={() => {
                   setFormState(0);
+                  setError("");
                 }}
               >
                 Sign In
@@ -82,6 +105,7 @@ export default function Authentication() {
                 variant={formState === 1 ? "contained" : "text"}
                 onClick={() => {
                   setFormState(1);
+                  setError("");
                 }}
               >
                 Sign Up
@@ -97,6 +121,7 @@ export default function Authentication() {
                   id="username"
                   label="Full Name"
                   name="username"
+                  value={name}
                   autoFocus
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -111,6 +136,7 @@ export default function Authentication() {
                 id="username"
                 label="username"
                 name="username"
+                value={username}
                 autoFocus
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -120,19 +146,20 @@ export default function Authentication() {
                 fullWidth
                 name="password"
                 label="Password"
+                value={password}
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
                 id="password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
+              <p style={{ color: "red" }}>{error}</p>
+
               <Button
                 type="button"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                onClick={handleAuth}
               >
                 {formState === 0 ? "Login " : "Register"}
               </Button>
@@ -140,6 +167,7 @@ export default function Authentication() {
           </Box>
         </Grid>
       </Grid>
+      <Snackbar open={open} autoHideDuration={4000} message={message} />
     </ThemeProvider>
   );
 }
