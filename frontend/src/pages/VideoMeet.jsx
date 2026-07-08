@@ -1,7 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
+import { Badge, IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import styles from "../styles/videoComponent.module.css";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import CallEndIcon from "@mui/icons-material/CallEnd";
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
+import ChatIcon from "@mui/icons-material/Chat";
 
 const server_url = "http://localhost:8000";
 
@@ -131,6 +141,8 @@ export default function VideoMeetComponent() {
       });
     }
 
+    // Stream ke har track ke event(ended) ke saath callback register karna.
+    // Browser us callback ko yaad rakhta hai. Jab future me us track ka ended event fire hota hai, browser automatically us callback ko execute kar deta hai.
     stream.getTracks().forEach(
       (track) =>
         (track.onended = () => {
@@ -192,7 +204,7 @@ export default function VideoMeetComponent() {
       navigator.mediaDevices
         .getUserMedia({ video: video, audio: audio })
         .then(getUserMediaSuccess)
-        .then((stream) => {})
+        // .then((stream) => {})
         .catch((e) => console.log(e));
     } else {
       try {
@@ -366,6 +378,14 @@ export default function VideoMeetComponent() {
     });
   };
 
+let handleVideo = () => {
+  setVideo(!video);
+};
+
+let handleAudio = () => {
+  setAudio(!audio);
+};
+
   let getMedia = () => {
     setVideo(videoAvailable);
     setAudio(audioAvailable);
@@ -398,9 +418,63 @@ export default function VideoMeetComponent() {
           </div>
         </div>
       ) : (
-        <>
-          <video ref={localVideoref} autoPlay muted></video>
-        </>
+        <div className={styles.meetVideoContainer}>
+          <div className={styles.buttonContainers}>
+            <IconButton onClick={handleVideo} style={{ color: "white" }}>
+              {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
+            </IconButton>
+            <IconButton onClick={handleEndCall} style={{ color: "red" }}>
+              <CallEndIcon />
+            </IconButton>
+            <IconButton onClick={handleAudio} style={{ color: "white" }}>
+              {audio === true ? <MicIcon /> : <MicOffIcon />}
+            </IconButton>
+
+            {screenAvailable === true ? (
+              <IconButton onClick={handleScreen} style={{ color: "white" }}>
+                {screen === true ? (
+                  <ScreenShareIcon />
+                ) : (
+                  <StopScreenShareIcon />
+                )}
+              </IconButton>
+            ) : (
+              <></>
+            )}
+
+            <Badge badgeContent={newMessages} max={999} color="orange">
+              <IconButton
+                onClick={() => setModal(!showModal)}
+                style={{ color: "white" }}
+              >
+                <ChatIcon />{" "}
+              </IconButton>
+            </Badge>
+          </div>
+
+          <video
+            className={styles.meetUserVideo}
+            ref={localVideoref}
+            autoPlay
+            muted
+          ></video>
+
+          <div className={styles.conferenceView}>
+            {videos.map((video) => (
+              <div key={video.socketId}>
+                <video
+                  data-socket={video.socketId}
+                  ref={(ref) => {
+                    if (ref && video.stream) {
+                      ref.srcObject = video.stream;
+                    }
+                  }}
+                  autoPlay
+                ></video>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );
