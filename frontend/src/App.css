@@ -7,6 +7,17 @@
   color: white;
 }
 
+.navHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navHeader img {
+  width: 50px;
+  height: 50px;
+}
+
 .landingPageContainer nav {
   padding-inline: 1.2rem;
   padding-block: 1.6rem;
@@ -20,10 +31,18 @@
   font-weight: 500;
 }
 
-.landingPageContainer nav .navlist {
+.navlist {
   display: flex;
-  gap: 1.6rem;
+  gap: 1.8rem;
+  align-items: center;
+}
+
+.navlist p {
   cursor: pointer;
+}
+
+.navlist p:hover {
+  color: #ff9839;
 }
 
 .landingMainContainer {
@@ -38,15 +57,27 @@
   font-size: 2.2rem;
 }
 
+.landingText p {
+  font-size: 1.35rem;
+  color: #d1d5db;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
 .getStartedBtn {
   display: inline-block;
   background: #d97500;
   width: fit-content;
   padding: 1rem;
-  border-radius: 20px;
+  border-radius: 14px;
   margin-top: 1.9rem;
   text-decoration: none;
   color: white;
+}
+
+.getStartedBtn:hover {
+  background: #ff9839;
+  transform: translateY(-2px);
 }
 
 .landingImage img {
@@ -58,9 +89,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: 20px;
+  padding: 10px;
   text-align: center;
-
 }
 .meetContainer {
   display: flex;
@@ -74,7 +104,6 @@
   height: 100%;
   display: flex;
   align-items: center;
-
 }
 
 .rightPanel {

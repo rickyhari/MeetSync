@@ -4,6 +4,137 @@
     background: rgb(1, 4, 48);
 }
 
+.lobbyContainer {
+    min-height: 100vh;
+    background: rgb(1, 4, 48);
+    color: #fff;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lobbyHeader {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.lobbyTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.lobbyMeetingCode {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.786);
+}
+
+.lobbyMeetingCode span {
+    color: #ff9839;
+    font-weight: 600;
+}
+
+.lobbyCard {
+    width: 100%;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.06);
+    /* border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px; */
+    padding: 2rem;
+}
+
+.lobbyPreview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.lobbyMediaControls {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.lobbyMediaButton {
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.lobbyMediaButtonActive {
+    background: #ff9839 !important;
+}
+
+.lobbyVideo {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.lobbyPreviewLabel {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.804);
+    text-align: center;
+}
+
+.lobbyForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.lobbyForm h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.lobbyForm p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.677);
+    margin-bottom: 0.25rem;
+}
+
+.lobbyInput input {
+    color: #fff;
+}
+
+.lobbyJoinBtn {
+    margin-top: 0.5rem;
+    background-color: #ff9839 !important;
+    padding: 0.75rem !important;
+    font-weight: 600 !important;
+}
+
+.lobbyJoinBtn:disabled {
+    background-color: rgba(255, 152, 57, 0.35) !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+@media (max-width: 768px) {
+    .lobbyCard {
+        grid-template-columns: 1fr;
+        padding: 1.25rem;
+    }
+
+    .lobbyHeader {
+        margin-bottom: 1.25rem;
+    }
+}
+
 .meetUserVideo {
     position: absolute;
     bottom: 10vh;

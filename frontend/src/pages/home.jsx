@@ -20,23 +20,33 @@ function HomeComponent() {
     <>
       <div className="navBar">
         <div style={{ display: "flex", alignItems: "center" }}>
-          <h2>Apna Video Call</h2>
+          <h2>MeetSync</h2>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            onClick={() => {
-              navigate("/history");
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <Button
+            variant="contained"
+            startIcon={<RestoreIcon />}
+            onClick={() => navigate("/history")}
+            sx={{
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
             }}
           >
-            <RestoreIcon />
-          </IconButton>
-          <p>History</p>
+            History
+          </Button>
 
           <Button
+            variant="outlined"
             onClick={() => {
               localStorage.removeItem("token");
               navigate("/auth");
+            }}
+            sx={{
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
             }}
           >
             Logout
@@ -47,14 +57,14 @@ function HomeComponent() {
       <div className="meetContainer">
         <div className="leftPanel">
           <div>
-            <h2>Providing Quality Video Call Just Like Quality Education</h2>
-
+            <h2>Enter a meeting code below to join your meeting.</h2>
+            <br />
             <div style={{ display: "flex", gap: "10px" }}>
               <TextField
                 onChange={(e) => setMeetingCode(e.target.value)}
                 id="outlined-basic"
                 label="Meeting Code"
-                variant="outlined"
+                variant="filled"
               />
               <Button onClick={handleJoinVideoCall} variant="contained">
                 Join

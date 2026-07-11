@@ -37,7 +37,7 @@ export default function Authentication() {
       }
       if (formState === 1) {
         let result = await handleRegister(name, username, password);
-        console.log(result);
+        // console.log(result);
         setUsername("");
         setMessage(result);
         setOpen(true);
@@ -47,9 +47,8 @@ export default function Authentication() {
         setName("");
       }
     } catch (err) {
-      console.log(err);
-      let message = err.response.data.message;
-      setError(message);
+      // console.log(err);
+      setError(err?.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -62,7 +61,7 @@ export default function Authentication() {
           sx={{
             minHeight: "100vh",
             display: { xs: "none", sm: "block" },
-            backgroundImage: "url(https://picsum.photos/id/6/5000/3333)",
+            backgroundImage: "url('/auth-bg.png')",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -118,11 +117,11 @@ export default function Authentication() {
                   margin="normal"
                   required
                   fullWidth
-                  id="username"
+                  id="name"
                   label="Full Name"
-                  name="username"
+                  name="name"
                   value={name}
-                  autoFocus
+                  autoFocus={formState === 1}
                   onChange={(e) => setName(e.target.value)}
                 />
               ) : (
@@ -134,10 +133,10 @@ export default function Authentication() {
                 required
                 fullWidth
                 id="username"
-                label="username"
+                label="Username"
                 name="username"
                 value={username}
-                autoFocus
+                autoFocus={formState === 0}
                 onChange={(e) => setUsername(e.target.value)}
               />
               <TextField

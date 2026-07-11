@@ -69,7 +69,9 @@ const getUserHistory = async (req, res) => {
 
   try {
     const user = await User.findOne({ token: token });
-    const meetings = await Meeting.find({ user_id: user.username });
+    const meetings = await Meeting.find({ user_id: user.username }).sort({
+      date: -1,
+    });
     res.json(meetings);
   } catch (e) {
     res.json({ message: `Something went wrong ${e}` });

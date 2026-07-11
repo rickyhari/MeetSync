@@ -37,8 +37,7 @@ export const AuthProvider = ({ children }) => {
         password: password,
       });
 
-      console.log(username, password);
-      console.log(request.data);
+      // console.log(request.data);
 
       if (request.status === httpStatus.OK) {
         localStorage.setItem("token", request.data.token);

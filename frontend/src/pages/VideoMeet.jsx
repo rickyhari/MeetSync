@@ -64,24 +64,16 @@ export default function VideoMeetComponent() {
       const videoPermission = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
-      if (videoPermission) {
-        setVideoAvailable(true);
-        console.log("Video permission granted");
-      } else {
-        setVideoAvailable(false);
-        console.log("Video permission denied");
-      }
+      const hasVideo = !!videoPermission;
+      setVideoAvailable(hasVideo);
+      setVideo(hasVideo);
 
       const audioPermission = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      if (audioPermission) {
-        setAudioAvailable(true);
-        console.log("Audio permission granted");
-      } else {
-        setAudioAvailable(false);
-        console.log("Audio permission denied");
-      }
+      const hasAudio = !!audioPermission;
+      setAudioAvailable(hasAudio);
+      setAudio(hasAudio);
 
       if (navigator.mediaDevices.getDisplayMedia) {
         setScreenAvailable(true);
@@ -89,10 +81,10 @@ export default function VideoMeetComponent() {
         setScreenAvailable(false);
       }
 
-      if (videoAvailable || audioAvailable) {
+      if (hasVideo || hasAudio) {
         const userMediaStream = await navigator.mediaDevices.getUserMedia({
-          video: videoAvailable,
-          audio: audioAvailable,
+          video: hasVideo,
+          audio: hasAudio,
         });
         if (userMediaStream) {
           window.localStream = userMediaStream;
@@ -475,8 +467,6 @@ export default function VideoMeetComponent() {
   };
 
   let getMedia = () => {
-    setVideo(videoAvailable);
-    setAudio(audioAvailable);
     connectToSocketServer();
   };
 
@@ -488,21 +478,86 @@ export default function VideoMeetComponent() {
   return (
     <div>
       {askForUsername === true ? (
-        <div>
-          <h2>Enter into Lobby </h2>
-          <TextField
-            id="outlined-basic"
-            label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            variant="outlined"
-          />
-          <Button variant="contained" onClick={connect}>
-            Connect
-          </Button>
+        <div className={styles.lobbyContainer}>
+          <header className={styles.lobbyHeader}>
+            <h1 className={styles.lobbyTitle}>MeetSync</h1>
+            <p className={styles.lobbyMeetingCode}>
+              Meeting:{" "}
+              <span>
+                {window.location.pathname.replace(/^\//, "") || "meeting"}
+              </span>
+            </p>
+          </header>
 
-          <div>
-            <video ref={localVideoref} autoPlay muted></video>
+          <div className={styles.lobbyCard}>
+            <div className={styles.lobbyPreview}>
+              <video
+                className={styles.lobbyVideo}
+                ref={localVideoref}
+                autoPlay
+                muted
+              ></video>
+              <div className={styles.lobbyMediaControls}>
+                <IconButton
+                  onClick={handleVideo}
+                  disabled={!videoAvailable}
+                  className={`${styles.lobbyMediaButton} ${
+                    video ? styles.lobbyMediaButtonActive : ""
+                  }`}
+                  aria-label={video ? "Turn camera off" : "Turn camera on"}
+                >
+                  {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
+                </IconButton>
+
+                <IconButton
+                  onClick={handleAudio}
+                  disabled={!audioAvailable}
+                  className={`${styles.lobbyMediaButton} ${
+                    audio ? styles.lobbyMediaButtonActive : ""
+                  }`}
+                  aria-label={audio ? "Mute microphone" : "Unmute microphone"}
+                >
+                  {audio === true ? <MicIcon /> : <MicOffIcon />}
+                </IconButton>
+              </div>
+              <p className={styles.lobbyPreviewLabel}>Preview</p>
+            </div>
+
+            <div className={styles.lobbyForm}>
+              <h2>Join Meeting</h2>
+              <p>Enter your username to join the meeting.</p>
+
+              <TextField
+                fullWidth
+                id="lobby-username"
+                label="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                variant="outlined"
+                className={styles.lobbyInput}
+                autoFocus
+                sx={{
+                  "& .MuiInputLabel-root": {
+                    color: "rgba(255,255,255,0.7)",
+                  },
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && username.trim()) {
+                    connect();
+                  }
+                }}
+              />
+
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={connect}
+                disabled={!username.trim()}
+                className={styles.lobbyJoinBtn}
+              >
+                Join Meeting
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
