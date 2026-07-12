@@ -149,6 +149,11 @@ export default function Authentication() {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
                 id="password"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAuth();
+                  }
+                }}
               />
 
               <p style={{ color: "red" }}>{error}</p>

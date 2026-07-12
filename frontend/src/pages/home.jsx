@@ -66,6 +66,11 @@ function HomeComponent() {
                 label="Meeting Code"
                 variant="filled"
                 autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleJoinVideoCall();
+                  }
+                }}
               />
               <Button onClick={handleJoinVideoCall} variant="contained">
                 Join
