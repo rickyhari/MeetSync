@@ -360,12 +360,33 @@ export default function VideoMeetComponent() {
 
           // Add the local video stream
           if (window.localStream !== undefined && window.localStream !== null) {
-            connections[socketListId].addStream(window.localStream);
+            
+              let streamToSend = window.localStream;
+              let tracks = [];
+
+              // Real audio ho to wahi use karo, warna silent audio track
+              if (streamToSend.getAudioTracks().length > 0) {
+                tracks.push(...streamToSend.getAudioTracks());
+              } else {
+                tracks.push(silence());
+              }
+
+              // Real video ho to wahi use karo, warna black video track
+              if (streamToSend.getVideoTracks().length > 0) {
+                tracks.push(...streamToSend.getVideoTracks());
+              } else {
+                tracks.push(black());
+              }
+
+              streamToSend = new MediaStream(tracks);
+              connections[socketListId].addStream(streamToSend);
           } else {
-            let blackSilence = (...args) =>
-              new MediaStream([black(...args), silence()]);
-            window.localStream = blackSilence();
-            connections[socketListId].addStream(window.localStream);
+
+              let blackSilence = (...args) =>
+                  new MediaStream([black(...args), silence()]);
+
+              window.localStream = blackSilence();
+              connections[socketListId].addStream(window.localStream);
           }
         });
 
