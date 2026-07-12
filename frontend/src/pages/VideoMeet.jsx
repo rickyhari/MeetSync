@@ -663,6 +663,11 @@ export default function VideoMeetComponent() {
                     variant="outlined"
                     size="small"
                     fullWidth
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        sendMessage();
+                      }
+                    }}
                   />
                   <Button variant="contained" onClick={sendMessage}>
                     Send
@@ -697,9 +702,12 @@ export default function VideoMeetComponent() {
               <></>
             )}
 
-            <Badge badgeContent={newMessages} max={999} color="orange">
+            <Badge badgeContent={newMessages} max={999} color="secondary">
               <IconButton
-                onClick={() => setModal(!showModal)}
+                onClick={() => {
+                  setModal(!showModal);
+                  setNewMessages(0);
+                }}
                 style={{ color: "white" }}
               >
                 <ChatIcon />{" "}
