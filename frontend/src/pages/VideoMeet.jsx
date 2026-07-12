@@ -255,7 +255,7 @@ export default function VideoMeetComponent() {
   const addMessage = (data, sender, socketIdSender) => {
     setMessages((prevMessages) => [
       ...prevMessages,
-      { sender: sender, data: data },
+      { sender: sender, data: data, socketIdSender: socketIdSender },
     ]);
     if (socketIdSender !== socketIdRef.current) {
       setNewMessages((prevNewMessages) => prevNewMessages + 1);
@@ -573,31 +573,50 @@ export default function VideoMeetComponent() {
           {showModal ? (
             <div className={styles.chatRoom}>
               <div className={styles.chatContainer}>
-                <h1>Chat</h1>
+                <h1 className={styles.chatTitle}>Chat</h1>
 
                 <div className={styles.chattingDisplay}>
                   {messages.length !== 0 ? (
                     messages.map((item, index) => {
-                      console.log(messages);
+                      const isOwnMessage =
+                        item.socketIdSender === socketIdRef.current;
+
                       return (
-                        <div style={{ marginBottom: "20px" }} key={index}>
-                          <p style={{ fontWeight: "bold" }}>{item.sender}</p>
-                          <p>{item.data}</p>
+                        <div
+                          className={`${styles.chatMessageRow} ${
+                            isOwnMessage
+                              ? styles.ownMessageRow
+                              : styles.remoteMessageRow
+                          }`}
+                          key={index}
+                        >
+                          <div
+                            className={`${styles.chatBubble} ${
+                              isOwnMessage
+                                ? styles.ownMessageBubble
+                                : styles.remoteMessageBubble
+                            }`}
+                          >
+                            <p className={styles.chatSender}>{item.sender}</p>
+                            <p className={styles.chatText}>{item.data}</p>
+                          </div>
                         </div>
                       );
                     })
                   ) : (
-                    <p>No Messages Yet</p>
+                    <p className={styles.emptyChatMessage}>No Messages Yet</p>
                   )}
                 </div>
 
-                <div className={styles.chattingArea}>
+                <div className={styles.chatInputArea}>
                   <TextField
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     id="outlined-basic"
                     label="Enter Your chat"
                     variant="outlined"
+                    size="small"
+                    fullWidth
                   />
                   <Button variant="contained" onClick={sendMessage}>
                     Send

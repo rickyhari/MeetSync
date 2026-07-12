@@ -65,6 +65,7 @@ function HomeComponent() {
                 id="outlined-basic"
                 label="Meeting Code"
                 variant="filled"
+                autoFocus
               />
               <Button onClick={handleJoinVideoCall} variant="contained">
                 Join
