@@ -4,6 +4,7 @@ let connections = {};
 let messages = {};
 let timeOnline = {};
 let usernames = {};
+let mediaStates = {};
 
 export const connectToSocket = (server) => {
   const io = new Server(server, {
@@ -24,6 +25,10 @@ export const connectToSocket = (server) => {
       }
       connections[path].push(socket.id);
       usernames[socket.id] = username;
+      mediaStates[socket.id] = {
+        audio: true,
+        video: true,
+      };
       timeOnline[socket.id] = new Date();
 
       // connections[path].forEach(elem => {
@@ -36,6 +41,7 @@ export const connectToSocket = (server) => {
           socket.id,
           connections[path],
           usernames,
+          mediaStates,
         );
       }
 
@@ -53,6 +59,32 @@ export const connectToSocket = (server) => {
 
     socket.on("signal", (toId, message) => {
       io.to(toId).emit("signal", socket.id, message);
+    });
+
+    socket.on("media-status", ({ audio, video }) => {
+      mediaStates[socket.id] = {
+        audio,
+        video,
+      };
+
+      let matchingRoom = "";
+
+      for (const room in connections) {
+        if (connections[room].includes(socket.id)) {
+          matchingRoom = room;
+          break;
+        }
+      }
+
+      if (matchingRoom !== "") {
+        connections[matchingRoom].forEach((clientId) => {
+          io.to(clientId).emit(
+            "media-status-update",
+            socket.id,
+            mediaStates[socket.id],
+          );
+        });
+      }
     });
 
     socket.on("chat-message", (data, sender) => {
@@ -102,7 +134,8 @@ export const connectToSocket = (server) => {
             connections[key].splice(index, 1);
 
             delete usernames[socket.id];
-            
+            delete mediaStates[socket.id];
+
             if (connections[key].length === 0) {
               delete connections[key];
             }

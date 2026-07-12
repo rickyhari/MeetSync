@@ -61,6 +61,8 @@ export default function VideoMeetComponent() {
 
   const [participantNames, setParticipantNames] = useState({});
 
+  const [mediaStates, setMediaStates] = useState({});
+
   const getPermissions = async () => {
     try {
       const videoPermission = await navigator.mediaDevices.getUserMedia({
@@ -211,6 +213,12 @@ export default function VideoMeetComponent() {
   useEffect(() => {
     if (video !== undefined && audio !== undefined) {
       getUserMedia();
+      if (socketRef.current) {
+        socketRef.current.emit("media-status", {
+          audio,
+          video,
+        });
+      }
       console.log("SET STATE HAS ", video, audio);
     }
   }, [video, audio]);
@@ -279,13 +287,22 @@ export default function VideoMeetComponent() {
 
       socketRef.current.on("chat-message", addMessage);
 
+      socketRef.current.on("media-status-update", (socketId, mediaState) => {
+        setMediaStates((prev) => ({
+          ...prev,
+          [socketId]: mediaState,
+        }));
+      });
+
       socketRef.current.on("user-left", (id) => {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
-      socketRef.current.on("user-joined", (id, clients, usernames) => {
-        console.log("Usernames:", usernames);
+      socketRef.current.on("user-joined", (id, clients, usernames, mediaStates) => {
+        // console.log("Usernames:", usernames);
         setParticipantNames(usernames);
+        setMediaStates(mediaStates);
+
         clients.forEach((socketListId) => {
           connections[socketListId] = new RTCPeerConnection(
             peerConfigConnections,
@@ -695,8 +712,18 @@ export default function VideoMeetComponent() {
                   autoPlay
                   playsInline
                 ></video>
+
                 <div className={styles.remoteParticipantName}>
                   {participantNames[video.socketId] || "Participant"}
+                </div>
+
+                <div className={styles.remoteStatusIcons}>
+                  {mediaStates[video.socketId]?.audio === false && (
+                    <MicOffIcon className={styles.remoteStatusIcon} />
+                  )}
+                  {mediaStates[video.socketId]?.video === false && (
+                    <VideocamOffIcon className={styles.remoteStatusIcon} />
+                  )}
                 </div>
               </div>
             ))}
