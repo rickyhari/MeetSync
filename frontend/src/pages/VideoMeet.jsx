@@ -59,6 +59,8 @@ export default function VideoMeetComponent() {
 
   let [videos, setVideos] = useState([]);
 
+  const [participantNames, setParticipantNames] = useState({});
+
   const getPermissions = async () => {
     try {
       const videoPermission = await navigator.mediaDevices.getUserMedia({
@@ -268,7 +270,11 @@ export default function VideoMeetComponent() {
     socketRef.current.on("signal", gotMessageFromServer);
 
     socketRef.current.on("connect", () => {
-      socketRef.current.emit("join-call", window.location.href);
+      socketRef.current.emit(
+        "join-call",
+        window.location.href,
+        username.trim(),
+      );
       socketIdRef.current = socketRef.current.id;
 
       socketRef.current.on("chat-message", addMessage);
@@ -277,7 +283,9 @@ export default function VideoMeetComponent() {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
-      socketRef.current.on("user-joined", (id, clients) => {
+      socketRef.current.on("user-joined", (id, clients, usernames) => {
+        console.log("Usernames:", usernames);
+        setParticipantNames(usernames);
         clients.forEach((socketListId) => {
           connections[socketListId] = new RTCPeerConnection(
             peerConfigConnections,
@@ -687,6 +695,9 @@ export default function VideoMeetComponent() {
                   autoPlay
                   playsInline
                 ></video>
+                <div className={styles.remoteParticipantName}>
+                  {participantNames[video.socketId] || "Participant"}
+                </div>
               </div>
             ))}
           </div>

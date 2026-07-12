@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 let connections = {};
 let messages = {};
 let timeOnline = {};
+let usernames = {};
 
 export const connectToSocket = (server) => {
   const io = new Server(server, {
@@ -17,12 +18,12 @@ export const connectToSocket = (server) => {
   io.on("connection", (socket) => {
     console.log("SOMETHING CONNECTED");
 
-    socket.on("join-call", (path) => {
+    socket.on("join-call", (path, username) => {
       if (connections[path] === undefined) {
         connections[path] = [];
       }
       connections[path].push(socket.id);
-
+      usernames[socket.id] = username;
       timeOnline[socket.id] = new Date();
 
       // connections[path].forEach(elem => {
@@ -34,6 +35,7 @@ export const connectToSocket = (server) => {
           "user-joined",
           socket.id,
           connections[path],
+          usernames,
         );
       }
 
@@ -99,6 +101,8 @@ export const connectToSocket = (server) => {
 
             connections[key].splice(index, 1);
 
+            delete usernames[socket.id];
+            
             if (connections[key].length === 0) {
               delete connections[key];
             }
