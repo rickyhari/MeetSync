@@ -475,6 +475,14 @@ export default function VideoMeetComponent() {
     getMedia();
   };
 
+  const getGridColumns = (participantCount) => {
+    if (participantCount <= 1) return 1;
+    if (participantCount <= 4) return 2;
+    return 3;
+  };
+
+  const gridColumns = getGridColumns(videos.length);
+
   return (
     <div>
       {askForUsername === true ? (
@@ -641,10 +649,16 @@ export default function VideoMeetComponent() {
             muted
           ></video>
 
-          <div className={styles.conferenceView}>
+          <div
+            className={styles.conferenceView}
+            style={{
+              gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))`,
+            }}
+          >
             {videos.map((video) => (
-              <div key={video.socketId}>
+              <div className={styles.remoteVideoTile} key={video.socketId}>
                 <video
+                  className={styles.remoteVideo}
                   data-socket={video.socketId}
                   ref={(ref) => {
                     if (ref && video.stream) {
@@ -652,6 +666,7 @@ export default function VideoMeetComponent() {
                     }
                   }}
                   autoPlay
+                  playsInline
                 ></video>
               </div>
             ))}

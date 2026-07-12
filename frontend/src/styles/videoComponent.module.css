@@ -2,6 +2,7 @@
     position: relative;
     height: 100vh;
     background: rgb(1, 4, 48);
+    overflow: hidden;
 }
 
 .lobbyContainer {
@@ -137,37 +138,57 @@
 
 .meetUserVideo {
     position: absolute;
-    bottom: 10vh;
-    height: 20vh;
-    width: auto;
-    left: 0;
-    border-radius: 20px;
+    left: 1.5rem;
+    bottom: 5.75rem;
+    width: clamp(160px, 22vw, 300px);
+    aspect-ratio: 16 / 9;
+    height: auto;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #000;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+    z-index: 4;
 }
 
 .buttonContainers {
     position: absolute;
-    width: 100vw;
+    left: 0;
+    right: 0;
     bottom: 0;
     text-align: center;
+    padding: 0.75rem 1rem 1rem;
+    z-index: 5;
 }
 
 .buttonContainers svg {
     font-size: 3rem;
 }
 
-.conferenceView { 
-
-    display: flex;
-    
-    padding: 10px;
-    gap: 10px;
+.conferenceView {
+    position: absolute;
+    inset: 0 0 5.25rem;
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+    justify-items: center;
+    align-items: center;
 }
 
-.conferenceView  video {
-    width: 40vw;
-    height: 20vh;
-    min-width: 30vw;
-    border-radius: 10px;
+.remoteVideoTile {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+}
+
+.remoteVideo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .chatRoom {
@@ -178,6 +199,7 @@
     border-radius: 10px;
     width: 30vw;
     padding-inline: 20px;
+    z-index: 6;
 }
 
 .chatContainer {
@@ -188,4 +210,17 @@
 .chattingArea {
     position: absolute;
     bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .conferenceView {
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .meetUserVideo {
+        left: 0.75rem;
+        bottom: 5.25rem;
+        width: clamp(132px, 36vw, 220px);
+    }
 }
