@@ -688,7 +688,13 @@ export default function VideoMeetComponent() {
 
           <video
             className={styles.meetUserVideo}
-            ref={localVideoref}
+            ref={(ref) => {
+              localVideoref.current = ref;
+
+              if(ref && window.localStream && ref.srcObject !== window.localStream){
+                ref.srcObject = window.localStream;
+              }
+            }}
             autoPlay
             muted
           ></video>
