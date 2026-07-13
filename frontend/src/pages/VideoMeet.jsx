@@ -326,42 +326,33 @@ export default function VideoMeetComponent() {
 
             // Wait for their video stream
             connections[socketListId].ontrack = (event) => {
-              console.log("BEFORE:", videoRef.current);
-              console.log("FINDING ID: ", socketListId);
+              setVideos((prevVideos) => {
+                const exists = prevVideos.find(
+                  (v) => v.socketId === socketListId,
+                );
+                let updated;
 
-              let videoExists = videoRef.current.find(
-                (video) => video.socketId === socketListId,
-              );
-
-              if (videoExists) {
-                console.log("FOUND EXISTING");
-
-                // Update the stream of the existing video
-                setVideos((videos) => {
-                  const updatedVideos = videos.map((video) =>
-                    video.socketId === socketListId
-                      ? { ...video, stream: event.streams[0] }
-                      : video,
+                if (exists) {
+                  updated = prevVideos.map((v) =>
+                    v.socketId === socketListId
+                      ? { ...v, stream: event.streams[0] }
+                      : v,
                   );
-                  videoRef.current = updatedVideos;
-                  return updatedVideos;
-                });
-              } else {
-                // Create a new video
-                console.log("CREATING NEW");
-                let newVideo = {
-                  socketId: socketListId,
-                  stream: event.streams[0],
-                  autoplay: true,
-                  playsinline: true,
-                };
+                } else {
+                  updated = [
+                    ...prevVideos,
+                    {
+                      socketId: socketListId,
+                      stream: event.streams[0],
+                      autoplay: true,
+                      playsinline: true,
+                    },
+                  ];
+                }
 
-                setVideos((videos) => {
-                  const updatedVideos = [...videos, newVideo];
-                  videoRef.current = updatedVideos;
-                  return updatedVideos;
-                });
-              }
+                videoRef.current = updated;
+                return updated;
+              });
             };
 
             // Add the local video stream
