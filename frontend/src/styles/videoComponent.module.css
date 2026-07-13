@@ -296,6 +296,11 @@
     line-height: 1.2;
 }
 
+.ownMessageBubble .chatSender{
+    color: #ffffff;
+    opacity: 0.85;
+}
+
 .remoteMessageBubble .chatSender{
     opacity: 0.7;
 }

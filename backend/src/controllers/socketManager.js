@@ -88,6 +88,10 @@ export const connectToSocket = (server) => {
     });
 
     socket.on("chat-message", (data, sender) => {
+      data = data.trim();
+      
+      if (!data) return;
+
       let matchingRoom = "";
 
       for (const room in connections) {
