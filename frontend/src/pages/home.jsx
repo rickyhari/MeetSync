@@ -64,7 +64,7 @@ export function HomeComponent({ guest = false }) {
           <div>
             <h2>Enter a meeting code below to join your meeting.</h2>
             <br />
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
               <TextField
                 onChange={(e) => setMeetingCode(e.target.value)}
                 id="outlined-basic"

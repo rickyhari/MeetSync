@@ -54,8 +54,10 @@ function History() {
           maxWidth: 960,
           mx: "auto",
           display: "flex",
+          flexWrap: "wrap",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: 2,
           mb: 3,
         }}
       >

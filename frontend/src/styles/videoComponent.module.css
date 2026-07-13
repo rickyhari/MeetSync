@@ -338,3 +338,9 @@
         width: clamp(132px, 36vw, 220px);
     }
 }
+
+@media (max-width: 1071px) {
+    .chatRoom {
+        bottom: 5.25rem;
+    }
+}
