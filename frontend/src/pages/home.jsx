@@ -6,13 +6,15 @@ import { Button, IconButton, TextField } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { AuthContext } from "../contexts/AuthContext";
 
-function HomeComponent() {
+export function HomeComponent({ guest = false }) {
   let navigate = useNavigate();
   const [meetingCode, setMeetingCode] = useState("");
 
   const { addToUserHistory } = useContext(AuthContext);
   let handleJoinVideoCall = async () => {
-    await addToUserHistory(meetingCode);
+    if (!guest) {
+      await addToUserHistory(meetingCode);
+    }
     navigate(`/${meetingCode}`);
   };
 
@@ -20,39 +22,41 @@ function HomeComponent() {
     <>
       <div className="navBar">
         <div style={{ display: "flex", alignItems: "center" }}>
-          <h2>MeetSync</h2>
+          {guest ? <h2>MeetSync - Guest</h2> : <h2>MeetSync</h2>} 
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <Button
-            variant="contained"
-            startIcon={<RestoreIcon />}
-            onClick={() => navigate("/history")}
-            sx={{
-              borderRadius: 2,
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            History
-          </Button>
+        {!guest && (
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Button
+              variant="contained"
+              startIcon={<RestoreIcon />}
+              onClick={() => navigate("/history")}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              History
+            </Button>
 
-          <Button
-            variant="outlined"
-            onClick={() => {
-              sessionStorage.removeItem("token");
-              // sessionStorage.clear();
-              navigate("/auth");
-            }}
-            sx={{
-              borderRadius: 2,
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            Logout
-          </Button>
-        </div>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                sessionStorage.removeItem("token");
+                // sessionStorage.clear();
+                navigate("/auth");
+              }}
+              sx={{
+                borderRadius: 2,
+                textTransform: "none",
+                fontWeight: 600,
+              }}
+            >
+              Logout
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="meetContainer">
