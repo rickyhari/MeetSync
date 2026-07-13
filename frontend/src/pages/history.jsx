@@ -12,8 +12,9 @@ import HistoryIcon from "@mui/icons-material/History";
 import CircularProgress from "@mui/material/CircularProgress";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import { IconButton } from "@mui/material";
+import withAuth from "../utils/withAuth";
 
-export default function History() {
+function History() {
   const { getHistoryOfUser } = useContext(AuthContext);
 
   const [meetings, setMeetings] = useState([]);
@@ -181,3 +182,5 @@ export default function History() {
     </Box>
   );
 }
+
+export default withAuth(History);

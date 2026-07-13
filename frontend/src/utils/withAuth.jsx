@@ -7,7 +7,7 @@ const withAuth = (WrappedComponent) => {
     const router = useNavigate();
 
     const isAuthenticated = () => {
-      if (localStorage.getItem("token")) {
+      if (sessionStorage.getItem("token")) {
         return true;
       }
       return false;
@@ -15,7 +15,12 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (!isAuthenticated()) {
-        router("/auth");
+        router("/auth", {
+          replace: true,
+          state: {
+            message: "Please sign in to access this page.",
+          },
+        });
       }
     }, []);
 

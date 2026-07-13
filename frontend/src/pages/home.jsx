@@ -40,7 +40,8 @@ function HomeComponent() {
           <Button
             variant="outlined"
             onClick={() => {
-              localStorage.removeItem("token");
+              sessionStorage.removeItem("token");
+              // sessionStorage.clear();
               navigate("/auth");
             }}
             sx={{

@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import Snackbar from "@mui/material/Snackbar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AuthContext } from "../contexts/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
@@ -23,12 +24,11 @@ export default function Authentication() {
   const [name, setName] = React.useState("");
   const [error, setError] = React.useState("");
   const [message, setMessage] = React.useState("");
-
   const [formState, setFormState] = React.useState(0);
-
   const [open, setOpen] = React.useState(false);
-
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   let handleAuth = async () => {
     try {
@@ -51,6 +51,22 @@ export default function Authentication() {
       setError(err?.response?.data?.message || "Something went wrong");
     }
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  React.useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+      setOpen(true);
+
+      navigate(location.pathname, {
+        replace: true,
+        state: null,
+      });
+    }
+  }, [location, navigate]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -171,7 +187,16 @@ export default function Authentication() {
           </Box>
         </Grid>
       </Grid>
-      <Snackbar open={open} autoHideDuration={4000} message={message} />
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        message={message}
+      />
     </ThemeProvider>
   );
 }

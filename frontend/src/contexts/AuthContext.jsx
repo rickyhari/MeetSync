@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       // console.log(request.data);
 
       if (request.status === httpStatus.OK) {
-        localStorage.setItem("token", request.data.token);
+        sessionStorage.setItem("token", request.data.token);
         router("/home");
       }
     } catch (err) {
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     try {
       let request = await client.get("/get_all_activity", {
         params: {
-          token: localStorage.getItem("token"),
+          token: sessionStorage.getItem("token"),
         },
       });
       return request.data;
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   const addToUserHistory = async (meetingCode) => {
     try {
       let request = await client.post("/add_to_activity", {
-        token: localStorage.getItem("token"),
+        token: sessionStorage.getItem("token"),
         meeting_code: meetingCode,
       });
       return request;
