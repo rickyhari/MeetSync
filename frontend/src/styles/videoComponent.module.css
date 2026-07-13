@@ -326,21 +326,62 @@
     border-top: 1px solid #ececec;
 }
 
-@media (max-width: 640px) {
-    .conferenceView {
-        gap: 0.75rem;
-        padding: 0.75rem;
-    }
-
-    .meetUserVideo {
-        left: 0.75rem;
-        bottom: 5.25rem;
-        width: clamp(132px, 36vw, 220px);
-    }
-}
-
 @media (max-width: 1071px) {
     .chatRoom {
         bottom: 5.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .conferenceView {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        overflow-y: auto;
+        align-items: start;
+        align-content: center;
+        inset: 0 0 4.25rem;
+    }
+
+    .meetUserVideo {
+        left: 0.5rem;
+        bottom: 4.25rem;
+        width: clamp(110px, 30vw, 160px);
+        border: 1.5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .buttonContainers {
+        padding: 0.5rem 0.5rem 0.75rem;
+    }
+
+    .buttonContainers svg {
+        font-size: 1.75rem;
+    }
+
+    .chatRoom {
+        bottom: 4.25rem;
+        top: 8px;
+        right: 8px;
+        border-radius: 12px;
+    }
+
+    .remoteParticipantName {
+        left: 8px;
+        bottom: 8px;
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+
+    .remoteStatusIcons {
+        right: 8px;
+        bottom: 8px;
+        gap: 6px;
+    }
+
+    .remoteStatusIcon {
+        padding: 4px;
+        font-size: 20px !important;
     }
 }
