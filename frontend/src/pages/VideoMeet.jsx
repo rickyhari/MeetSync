@@ -680,18 +680,18 @@ export default function VideoMeetComponent() {
           )}
 
           <div className={styles.buttonContainers}>
-            <IconButton onClick={handleVideo} style={{ color: "white" }}>
+            <IconButton onClick={handleVideo} sx={{ color: "white" }}>
               {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
             </IconButton>
-            <IconButton onClick={handleEndCall} style={{ color: "red" }}>
+            <IconButton onClick={handleEndCall} sx={{ color: "red" }}>
               <CallEndIcon />
             </IconButton>
-            <IconButton onClick={handleAudio} style={{ color: "white" }}>
+            <IconButton onClick={handleAudio} sx={{ color: "white" }}>
               {audio === true ? <MicIcon /> : <MicOffIcon />}
             </IconButton>
 
             {screenAvailable === true ? (
-              <IconButton onClick={handleScreen} style={{ color: "white" }}>
+              <IconButton onClick={handleScreen} sx={{ color: "white" }}>
                 {screen === true ? (
                   <ScreenShareIcon />
                 ) : (
@@ -708,7 +708,7 @@ export default function VideoMeetComponent() {
                   setModal(!showModal);
                   setNewMessages(0);
                 }}
-                style={{ color: "white" }}
+                sx={{ color: "white" }}
               >
                 <ChatIcon />{" "}
               </IconButton>

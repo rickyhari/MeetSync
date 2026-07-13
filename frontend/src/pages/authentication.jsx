@@ -172,7 +172,7 @@ export default function Authentication() {
                 }}
               />
 
-              <p style={{ color: "red" }}>{error}</p>
+              <Typography color="error">{error}</Typography>
 
               <Button
                 type="button"
