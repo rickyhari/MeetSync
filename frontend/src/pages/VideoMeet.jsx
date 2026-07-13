@@ -1,17 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
-import { Badge, IconButton } from "@mui/material";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import styles from "../styles/videoComponent.module.css";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import VideocamOffIcon from "@mui/icons-material/VideocamOff";
-import CallEndIcon from "@mui/icons-material/CallEnd";
-import MicIcon from "@mui/icons-material/Mic";
-import MicOffIcon from "@mui/icons-material/MicOff";
-import ScreenShareIcon from "@mui/icons-material/ScreenShare";
-import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
-import ChatIcon from "@mui/icons-material/Chat";
+import Lobby from "../components/Lobby";
+import ChatModal from "../components/ChatModal";
+import MeetingControls from "../components/MeetingControls";
+import LocalVideo from "../components/LocalVideo";
+import ConferenceGrid from "../components/ConferenceGrid";
 
 const server_url = "http://localhost:8000";
 
@@ -544,241 +538,55 @@ export default function VideoMeetComponent() {
   return (
     <div>
       {askForUsername === true ? (
-        <div className={styles.lobbyContainer}>
-          <header className={styles.lobbyHeader}>
-            <h1 className={styles.lobbyTitle}>MeetSync</h1>
-            <p className={styles.lobbyMeetingCode}>
-              Meeting:{" "}
-              <span>
-                {window.location.pathname.replace(/^\//, "") || "meeting"}
-              </span>
-            </p>
-          </header>
-
-          <div className={styles.lobbyCard}>
-            <div className={styles.lobbyPreview}>
-              <video
-                className={styles.lobbyVideo}
-                ref={localVideoref}
-                autoPlay
-                muted
-              ></video>
-              <div className={styles.lobbyMediaControls}>
-                <IconButton
-                  onClick={handleVideo}
-                  disabled={!videoAvailable}
-                  className={`${styles.lobbyMediaButton} ${
-                    video ? styles.lobbyMediaButtonActive : ""
-                  }`}
-                  aria-label={video ? "Turn camera off" : "Turn camera on"}
-                >
-                  {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
-                </IconButton>
-
-                <IconButton
-                  onClick={handleAudio}
-                  disabled={!audioAvailable}
-                  className={`${styles.lobbyMediaButton} ${
-                    audio ? styles.lobbyMediaButtonActive : ""
-                  }`}
-                  aria-label={audio ? "Mute microphone" : "Unmute microphone"}
-                >
-                  {audio === true ? <MicIcon /> : <MicOffIcon />}
-                </IconButton>
-              </div>
-              <p className={styles.lobbyPreviewLabel}>Preview</p>
-            </div>
-
-            <div className={styles.lobbyForm}>
-              <h2>Join Meeting</h2>
-              <p>Enter your username to join the meeting.</p>
-
-              <TextField
-                fullWidth
-                id="lobby-username"
-                label="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                variant="outlined"
-                className={styles.lobbyInput}
-                autoFocus
-                sx={{
-                  "& .MuiInputLabel-root": {
-                    color: "rgba(255,255,255,0.7)",
-                  },
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && username.trim()) {
-                    connect();
-                  }
-                }}
-              />
-
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={connect}
-                disabled={!username.trim()}
-                className={styles.lobbyJoinBtn}
-              >
-                Join Meeting
-              </Button>
-            </div>
-          </div>
-        </div>
+        <Lobby
+          localVideoref={localVideoref}
+          video={video}
+          videoAvailable={videoAvailable}
+          handleVideo={handleVideo}
+          audio={audio}
+          audioAvailable={audioAvailable}
+          handleAudio={handleAudio}
+          username={username}
+          setUsername={setUsername}
+          connect={connect}
+        />
       ) : (
         <div className={styles.meetVideoContainer}>
           {showModal ? (
-            <div className={styles.chatRoom}>
-              <div className={styles.chatContainer}>
-                <h1 className={styles.chatTitle}>Chat</h1>
-
-                <div className={styles.chattingDisplay}>
-                  {messages.length !== 0 ? (
-                    messages.map((item, index) => {
-                      const isOwnMessage =
-                        item.socketIdSender === socketIdRef.current;
-
-                      return (
-                        <div
-                          className={`${styles.chatMessageRow} ${
-                            isOwnMessage
-                              ? styles.ownMessageRow
-                              : styles.remoteMessageRow
-                          }`}
-                          key={index}
-                        >
-                          <div
-                            className={`${styles.chatBubble} ${
-                              isOwnMessage
-                                ? styles.ownMessageBubble
-                                : styles.remoteMessageBubble
-                            }`}
-                          >
-                            <p className={styles.chatSender}>{item.sender}</p>
-                            <p className={styles.chatText}>{item.data}</p>
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <p className={styles.emptyChatMessage}>No Messages Yet</p>
-                  )}
-                </div>
-
-                <div className={styles.chatInputArea}>
-                  <TextField
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    id="outlined-basic"
-                    label="Enter Your chat"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        sendMessage();
-                      }
-                    }}
-                  />
-                  <Button variant="contained" onClick={sendMessage}>
-                    Send
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <ChatModal
+              messages={messages}
+              socketIdRef={socketIdRef}
+              message={message}
+              setMessage={setMessage}
+              sendMessage={sendMessage}
+            />
           ) : (
             <></>
           )}
 
-          <div className={styles.buttonContainers}>
-            <IconButton onClick={handleVideo} sx={{ color: "white" }}>
-              {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
-            </IconButton>
-            <IconButton onClick={handleEndCall} sx={{ color: "red" }}>
-              <CallEndIcon />
-            </IconButton>
-            <IconButton onClick={handleAudio} sx={{ color: "white" }}>
-              {audio === true ? <MicIcon /> : <MicOffIcon />}
-            </IconButton>
+          <MeetingControls
+            video={video}
+            handleVideo={handleVideo}
+            handleEndCall={handleEndCall}
+            audio={audio}
+            handleAudio={handleAudio}
+            screenAvailable={screenAvailable}
+            handleScreen={handleScreen}
+            screen={screen}
+            newMessages={newMessages}
+            showModal={showModal}
+            setModal={setModal}
+            setNewMessages={setNewMessages}
+          />
 
-            {screenAvailable === true ? (
-              <IconButton onClick={handleScreen} sx={{ color: "white" }}>
-                {screen === true ? (
-                  <ScreenShareIcon />
-                ) : (
-                  <StopScreenShareIcon />
-                )}
-              </IconButton>
-            ) : (
-              <></>
-            )}
+          <LocalVideo localVideoref={localVideoref} />
 
-            <Badge badgeContent={newMessages} max={999} color="secondary">
-              <IconButton
-                onClick={() => {
-                  setModal(!showModal);
-                  setNewMessages(0);
-                }}
-                sx={{ color: "white" }}
-              >
-                <ChatIcon />{" "}
-              </IconButton>
-            </Badge>
-          </div>
-
-          <video
-            className={styles.meetUserVideo}
-            ref={(ref) => {
-              localVideoref.current = ref;
-
-              if (
-                ref &&
-                window.localStream &&
-                ref.srcObject !== window.localStream
-              ) {
-                ref.srcObject = window.localStream;
-              }
-            }}
-            autoPlay
-            muted
-          ></video>
-
-          <div
-            className={styles.conferenceView}
-            style={{
-              gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))`,
-            }}
-          >
-            {videos.map((video) => (
-              <div className={styles.remoteVideoTile} key={video.socketId}>
-                <video
-                  className={styles.remoteVideo}
-                  data-socket={video.socketId}
-                  ref={(ref) => {
-                    if (ref && video.stream) {
-                      ref.srcObject = video.stream;
-                    }
-                  }}
-                  autoPlay
-                  playsInline
-                ></video>
-
-                <div className={styles.remoteParticipantName}>
-                  {participantNames[video.socketId] || "Participant"}
-                </div>
-
-                <div className={styles.remoteStatusIcons}>
-                  {mediaStates[video.socketId]?.audio === false && (
-                    <MicOffIcon className={styles.remoteStatusIcon} />
-                  )}
-                  {mediaStates[video.socketId]?.video === false && (
-                    <VideocamOffIcon className={styles.remoteStatusIcon} />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ConferenceGrid
+            videos={videos}
+            gridColumns={gridColumns}
+            participantNames={participantNames}
+            mediaStates={mediaStates}
+          />
         </div>
       )}
     </div>
