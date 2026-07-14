@@ -71,7 +71,8 @@ const register = async (req, res) => {
 };
 
 const getUserHistory = async (req, res) => {
-  const { token } = req.query;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : undefined;
 
   try {
     const user = await User.findOne({ token: token });
@@ -87,7 +88,9 @@ const getUserHistory = async (req, res) => {
 };
 
 const addToHistory = async (req, res) => {
-  const { token, meeting_code } = req.body;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : undefined;
+  const { meeting_code } = req.body;
 
   try {
     const user = await User.findOne({ token: token });

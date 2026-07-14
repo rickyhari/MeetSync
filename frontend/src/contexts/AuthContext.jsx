@@ -49,8 +49,8 @@ export const AuthProvider = ({ children }) => {
   const getHistoryOfUser = async () => {
     try {
       let request = await client.get("/get_all_activity", {
-        params: {
-          token: sessionStorage.getItem("token"),
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       });
       return request.data;
@@ -61,10 +61,17 @@ export const AuthProvider = ({ children }) => {
 
   const addToUserHistory = async (meetingCode) => {
     try {
-      let request = await client.post("/add_to_activity", {
-        token: sessionStorage.getItem("token"),
-        meeting_code: meetingCode,
-      });
+      let request = await client.post(
+        "/add_to_activity",
+        {
+          meeting_code: meetingCode,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
       return request;
     } catch (e) {
       throw e;
