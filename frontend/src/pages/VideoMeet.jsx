@@ -7,7 +7,7 @@ import MeetingControls from "../components/MeetingControls";
 import LocalVideo from "../components/LocalVideo";
 import ConferenceGrid from "../components/ConferenceGrid";
 
-const server_url = "http://localhost:8000";
+const server_url = import.meta.env.VITE_SERVER_URL;
 
 var connections = {};
 
