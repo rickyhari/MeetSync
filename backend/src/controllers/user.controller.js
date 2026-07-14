@@ -32,8 +32,8 @@ const login = async (req, res) => {
         .status(httpStatus.UNAUTHORIZED)
         .json({ message: "Invalid Username or password" });
     }
-  } catch (e) {
-    return res.status(500).json({ message: `Something went wrong ${e}` });
+  } catch {
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -59,9 +59,9 @@ const register = async (req, res) => {
     await newUser.save();
 
     res.status(httpStatus.CREATED).json({ message: "User Registered" });
-  } catch (e) {
+  } catch {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-      message: `Something went wrong ${e}`,
+      message: "Something went wrong",
     });
   }
 };
@@ -75,9 +75,9 @@ const getUserHistory = async (req, res) => {
       date: -1,
     });
     res.json(meetings);
-  } catch (e) {
+  } catch {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-      message: `Something went wrong ${e}`,
+      message: "Something went wrong",
     });
   }
 };
@@ -96,9 +96,9 @@ const addToHistory = async (req, res) => {
     await newMeeting.save();
 
     res.status(httpStatus.CREATED).json({ message: "Added code to history" });
-  } catch (e) {
+  } catch {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-      message: `Something went wrong ${e}`,
+      message: "Something went wrong",
     });
   }
 };
