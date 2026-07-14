@@ -56,28 +56,47 @@ export default function VideoMeetComponent() {
   const [mediaStates, setMediaStates] = useState({});
 
   const getPermissions = async () => {
+    let hasVideo = false;
+    let hasAudio = false;
+
+    // 1. Check Camera Permission
     try {
-      const videoPermission = await navigator.mediaDevices.getUserMedia({
+      const videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
-      const hasVideo = !!videoPermission;
-      setVideoAvailable(hasVideo);
-      setVideo(hasVideo);
+      hasVideo = true;
+      // Stop temporary stream to release camera hardware
+      videoStream.getTracks().forEach((track) => track.stop());
+    } catch {
+      // intentionally ignored
+    }
+    setVideoAvailable(hasVideo);
+    setVideo(hasVideo);
 
-      const audioPermission = await navigator.mediaDevices.getUserMedia({
+    // 2. Check Microphone Permission
+    try {
+      const audioStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-      const hasAudio = !!audioPermission;
-      setAudioAvailable(hasAudio);
-      setAudio(hasAudio);
+      hasAudio = true;
+      // Stop temporary stream to release microphone hardware
+      audioStream.getTracks().forEach((track) => track.stop());
+    } catch {
+      // intentionally ignored
+    }
+    setAudioAvailable(hasAudio);
+    setAudio(hasAudio);
 
-      if (navigator.mediaDevices.getDisplayMedia) {
-        setScreenAvailable(true);
-      } else {
-        setScreenAvailable(false);
-      }
+    // 3. Check Screen Sharing Support
+    if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+      setScreenAvailable(true);
+    } else {
+      setScreenAvailable(false);
+    }
 
-      if (hasVideo || hasAudio) {
+    // 4. Request and Set Combined Stream
+    if (hasVideo || hasAudio) {
+      try {
         const userMediaStream = await navigator.mediaDevices.getUserMedia({
           video: hasVideo,
           audio: hasAudio,
@@ -88,9 +107,9 @@ export default function VideoMeetComponent() {
             localVideoref.current.srcObject = userMediaStream;
           }
         }
+      } catch {
+        // intentionally ignored
       }
-    } catch {
-      // intentionally ignored
     }
   };
 
