@@ -17,8 +17,6 @@ export const connectToSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("SOMETHING CONNECTED");
-
     socket.on("join-call", (path, username) => {
       if (connections[path] === undefined) {
         connections[path] = [];
@@ -30,10 +28,6 @@ export const connectToSocket = (server) => {
         video: true,
       };
       timeOnline[socket.id] = new Date();
-
-      // connections[path].forEach(elem => {
-      //     io.to(elem)
-      // })
 
       for (let a = 0; a < connections[path].length; a++) {
         io.to(connections[path][a]).emit(
@@ -111,7 +105,6 @@ export const connectToSocket = (server) => {
           data: data,
           "socket-id-sender": socket.id,
         });
-        // console.log("message", matchingRoom, ":", sender, data);
 
         connections[matchingRoom].forEach((elem) => {
           io.to(elem).emit("chat-message", data, sender, socket.id);
@@ -120,8 +113,6 @@ export const connectToSocket = (server) => {
     });
 
     socket.on("disconnect", () => {
-      const diffTime = Math.abs(timeOnline[socket.id] - new Date());
-
       let key;
 
       for (const [k, v] of Object.entries(connections)) {

@@ -37,8 +37,6 @@ export const AuthProvider = ({ children }) => {
         password: password,
       });
 
-      // console.log(request.data);
-
       if (request.status === httpStatus.OK) {
         sessionStorage.setItem("token", request.data.token);
         router("/home");

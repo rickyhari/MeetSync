@@ -11,7 +11,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 import CircularProgress from "@mui/material/CircularProgress";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import { IconButton } from "@mui/material";
 import withAuth from "../utils/withAuth";
 
 function History() {

@@ -49,8 +49,6 @@ export default function VideoMeetComponent() {
 
   let [username, setUsername] = useState("");
 
-  const videoRef = useRef([]);
-
   let [videos, setVideos] = useState([]);
 
   const [participantNames, setParticipantNames] = useState({});
@@ -91,21 +89,20 @@ export default function VideoMeetComponent() {
           }
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch {
+      // intentionally ignored
     }
   };
 
   useEffect(() => {
-    console.log("HELLO");
     getPermissions();
   }, []);
 
   let getUserMediaSuccess = (stream) => {
     try {
       window.localStream.getTracks().forEach((track) => track.stop());
-    } catch (e) {
-      console.log(e);
+    } catch {
+      // intentionally ignored
     }
 
     window.localStream = stream;
@@ -119,7 +116,6 @@ export default function VideoMeetComponent() {
       });
 
       connections[id].createOffer().then((description) => {
-        console.log(description);
         connections[id]
           .setLocalDescription(description)
           .then(() => {
@@ -129,7 +125,9 @@ export default function VideoMeetComponent() {
               JSON.stringify({ sdp: connections[id].localDescription }),
             );
           })
-          .catch((e) => console.log(e));
+          .catch(() => {
+            /* error is intentionally ignored */
+          });
       });
     }
 
@@ -144,8 +142,8 @@ export default function VideoMeetComponent() {
           try {
             let tracks = localVideoref.current.srcObject.getTracks();
             tracks.forEach((track) => track.stop());
-          } catch (e) {
-            console.log(e);
+          } catch {
+            // intentionally ignored
           }
 
           let blackSilence = (...args) =>
@@ -168,7 +166,9 @@ export default function VideoMeetComponent() {
                     JSON.stringify({ sdp: connections[id].localDescription }),
                   );
                 })
-                .catch((e) => console.log(e));
+                .catch(() => {
+                  /* error is intentionally ignored */
+                });
             });
           }
         }),
@@ -198,13 +198,16 @@ export default function VideoMeetComponent() {
       navigator.mediaDevices
         .getUserMedia({ video: video, audio: audio })
         .then(getUserMediaSuccess)
-        // .then((stream) => {})
-        .catch((e) => console.log(e));
+        .catch(() => {
+          /* error is intentionally ignored */
+        });
     } else {
       try {
         let tracks = localVideoref.current.srcObject.getTracks();
         tracks.forEach((track) => track.stop());
-      } catch (e) {}
+      } catch {
+        // intentionally ignored
+      }
     }
   };
 
@@ -217,7 +220,6 @@ export default function VideoMeetComponent() {
           video,
         });
       }
-      console.log("SET STATE HAS ", video, audio);
     }
   }, [video, audio]);
 
@@ -244,18 +246,26 @@ export default function VideoMeetComponent() {
                         }),
                       );
                     })
-                    .catch((e) => console.log(e));
+                    .catch(() => {
+                      /* error is intentionally ignored */
+                    });
                 })
-                .catch((e) => console.log(e));
+                .catch(() => {
+                  /* error is intentionally ignored */
+                });
             }
           })
-          .catch((e) => console.log(e));
+          .catch(() => {
+            /* error is intentionally ignored */
+          });
       }
 
       if (signal.ice) {
         connections[fromId]
           .addIceCandidate(new RTCIceCandidate(signal.ice))
-          .catch((e) => console.log(e));
+          .catch(() => {
+            /* error is intentionally ignored */
+          });
       }
     }
   };
@@ -299,7 +309,6 @@ export default function VideoMeetComponent() {
       socketRef.current.on(
         "user-joined",
         (id, clients, usernames, mediaStates) => {
-          // console.log("Usernames:", usernames);
           setParticipantNames(usernames);
           setMediaStates(mediaStates);
 
@@ -344,7 +353,6 @@ export default function VideoMeetComponent() {
                   ];
                 }
 
-                videoRef.current = updated;
                 return updated;
               });
             };
@@ -394,7 +402,9 @@ export default function VideoMeetComponent() {
                 window.localStream.getTracks().forEach((track) => {
                   connections[id2].addTrack(track, window.localStream);
                 });
-              } catch (e) {}
+              } catch {
+                // intentionally ignored
+              }
 
               connections[id2].createOffer().then((description) => {
                 connections[id2]
@@ -408,7 +418,9 @@ export default function VideoMeetComponent() {
                       }),
                     );
                   })
-                  .catch((e) => console.log(e));
+                  .catch(() => {
+                    /* error is intentionally ignored */
+                  });
               });
             }
           }
@@ -426,11 +438,10 @@ export default function VideoMeetComponent() {
   };
 
   let getDisplayMediaSuccess = (stream) => {
-    console.log("STEP 1: getDisplayMediaSuccess called");
     try {
       window.localStream.getTracks().forEach((track) => track.stop());
-    } catch (e) {
-      console.log(e);
+    } catch {
+      // intentionally ignored
     }
 
     window.localStream = stream;
@@ -453,7 +464,9 @@ export default function VideoMeetComponent() {
               JSON.stringify({ sdp: connections[id].localDescription }),
             );
           })
-          .catch((e) => console.log(e));
+          .catch(() => {
+            /* error is intentionally ignored */
+          });
       });
     }
 
@@ -465,8 +478,8 @@ export default function VideoMeetComponent() {
           try {
             let tracks = localVideoref.current.srcObject.getTracks();
             tracks.forEach((track) => track.stop());
-          } catch (e) {
-            console.log(e);
+          } catch {
+            // intentionally ignored
           }
 
           let blackSilence = (...args) =>
@@ -485,8 +498,9 @@ export default function VideoMeetComponent() {
         navigator.mediaDevices
           .getDisplayMedia({ video: true, audio: true })
           .then(getDisplayMediaSuccess)
-          // .then((stream) => {})
-          .catch((e) => console.log(e));
+          .catch(() => {
+            /* error is intentionally ignored */
+          });
       }
     }
   };
@@ -505,7 +519,9 @@ export default function VideoMeetComponent() {
     try {
       let tracks = localVideoref.current.srcObject.getTracks();
       tracks.forEach((track) => track.stop());
-    } catch (e) {}
+    } catch {
+      // intentionally ignored
+    }
     window.location.href = "/";
   };
 
