@@ -8,7 +8,9 @@ const login = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "Please Provide" });
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: "Please Provide",
+    });
   }
 
   try {
@@ -33,7 +35,9 @@ const login = async (req, res) => {
         .json({ message: "Invalid Username or password" });
     }
   } catch {
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: "Something went wrong",
+    });
   }
 };
 
