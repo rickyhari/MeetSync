@@ -12,7 +12,6 @@ export const connectToSocket = (server) => {
       origin: "*",
       methods: ["GET", "POST"],
       allowedHeaders: ["*"],
-      credentials: true,
     },
   });
 
