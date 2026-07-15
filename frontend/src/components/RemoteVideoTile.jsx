@@ -13,7 +13,7 @@ export default function RemoteVideoTile({
         className={styles.remoteVideo}
         data-socket={video.socketId}
         ref={(ref) => {
-          if (ref && video.stream) {
+          if (ref && video.stream && ref.srcObject !== video.stream) {
             ref.srcObject = video.stream;
           }
         }}
