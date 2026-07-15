@@ -13,9 +13,9 @@ export default function LandingPage() {
         <div className="navlist">
           <p onClick={() => router("/guest")}>Join as Guest</p>
 
-          <p onClick={() => router("/auth")}>Register</p>
+          <p onClick={() => router("/auth", { state: { tab: "signup" } })}>Register</p>
 
-          <p onClick={() => router("/auth")}>Login</p>
+          <p onClick={() => router("/auth", { state: { tab: "signin" } })}>Login</p>
         </div>
       </nav>
 

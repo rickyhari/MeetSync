@@ -16,15 +16,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 const defaultTheme = createTheme();
 
 export default function Authentication() {
+  const location = useLocation();
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [name, setName] = React.useState("");
   const [error, setError] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [formState, setFormState] = React.useState(0);
+  const [formState, setFormState] = React.useState(
+    location.state?.tab === "signup" ? 1 : 0
+  );
   const [open, setOpen] = React.useState(false);
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
-  const location = useLocation();
   const navigate = useNavigate();
 
   let handleAuth = async () => {
